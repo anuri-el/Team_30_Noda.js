@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Rides</title>
+</head>
+<body>
+<h1>Available Rides</h1>
+<ul>
+    <% trips.forEach(trip => { %>
+        <li><%= trip.from %> - <%= trip.to %> | <%= trip.date %> | Passengers: <%= trip.seats %></li>
+    <% }) %>
+</ul>
+</body>
+</html>

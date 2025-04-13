@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= user.name %></title>
+</head>
+<body>
+<h1><%= user.name %></h1>
+
+<h2>Your Rides</h2>
+<% if (trips.length > 0) { %>
+    <ul>
+        <% trips.forEach(trip => { %>
+            <li>
+                <%= trip.from %> → <%= trip.to %> | <%= trip.date %> | Місць: <%= trip.seats %>
+                <form action="/trips/<%= trip.id %>/delete" method="POST" style="display:inline;">
+                    <input type="hidden" name="userId" value="<%= user.id %>">S
+                    <button type="submit">Delete</button>
+                </form>
+                <form action="/trips/<%= trip.id %>/edit" method="GET" style="display:inline;">
+                    <button type="submit">Edit</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+<% } else { %>
+    <p>You don't have any rides yet.</p>
+<% } %>
+
+<h2>Publish a ride</h2>
+<form action="/users/<%= user.id %>/driver/trips" method="POST">
+    <label>Leaving from: <input type="text" name="from" required></label><br>
+    <label>Going to: <input type="text" name="to" required></label><br>
+    <label>Date: <input type="date" name="date" required></label><br>
+    <label>Passengers: <input type="number" name="seats" required></label><br>
+    <button type="submit">Create</button>
+</form>
+</body>
+</html>

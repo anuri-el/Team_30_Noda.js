@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "from": "Київ",
+    "to": "Львів",
+    "date": "2025-04-15",
+    "seats": 3,
+    "driverId": 101
+  },
+  {
+    "id": 2,
+    "from": "Одеса",
+    "to": "Харків",
+    "date": "2025-04-20",
+    "seats": 2,
+    "driverId": 102
+  },
+  {
+    "id": 1744574947548,
+    "from": "ret",
+    "to": "fd",
+    "date": "0256-05-24",
+    "seats": 342,
+    "driverId": 1
+  },
+  {
+    "id": 1744575304940,
+    "from": "sdf",
+    "to": "ee4",
+    "date": "0062-04-02",
+    "seats": 66772,
+    "driverId": 1
+  },
+  {
+    "id": 1744575595819,
+    "from": "trygff",
+    "to": "ertrt6",
+    "date": "0025-05-03",
+    "seats": 533,
+    "driverId": 1
+  },
+  {
+    "id": 1744578611333,
+    "from": "retf1",
+    "to": "retrtd1",
+    "date": "0637-07-04",
+    "seats": 461,
+    "driverId": 1
+  }
+]
