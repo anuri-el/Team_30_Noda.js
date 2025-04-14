@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>List of Rides</title>
-</head>
-<body>
-<h1>Available Rides</h1>
+<form action="" method="get" class="flex flex-col ">
+    <input type="text" placeholder="Search..." class="w-full h-10 rounded-md p-4 text-base">
+    <label for="">Filters:</label>
+</form>
+<h1 class="mt-8">Available Rides</h1>
 <ul>
-    <% trips.forEach(trip => { %>
-        <li><%= trip.from %> - <%= trip.to %> | <%= trip.date %> | Passengers: <%= trip.seats %></li>
-    <% }) %>
+    <% trips.forEach(trip=> { %>
+        <li>
+            <%= trip.from %> - <%= trip.to %> | <%= trip.date %> | Passengers: <%= trip.seats %>
+        </li>
+        <% }) %>
 </ul>
-</body>
-</html>
