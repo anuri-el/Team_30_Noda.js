@@ -1,0 +1,33 @@
+const express = require("express");
+const passport = require("passport");
+const router = express.Router();
+
+router.get("/login", (req, res) => {
+	res.render("auth/login", { title: "Login", error: null });
+});
+
+router.post(
+	"/login",
+	passport.authenticate("local", {
+		failureRedirect: "/login?error=1",
+		successRedirect: "/profile",
+	})
+);
+
+router.get("/logout", (req, res) => {
+	req.logout(err => {
+		if (err) return res.status(500).send("Logout error");
+		res.redirect("/");
+	});
+});
+
+router.get("/profile", ensureAuthenticated, (req, res) => {
+	res.render("profile", { title: "Profile", user: req.user });
+});
+
+function ensureAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) return next();
+	res.redirect("/login");
+}
+
+module.exports = router;

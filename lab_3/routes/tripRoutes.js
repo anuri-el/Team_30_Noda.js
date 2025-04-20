@@ -1,13 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const tripController = require('../controllers/tripController');
+const tripController = require("../controllers/tripController");
+const { ensureAuthenticated } = require("../middleware/authMiddleware");
 
-router.get('/', tripController.getHomePage);
-router.get('/trips', tripController.getAllTrips);
-router.post('/users/:id/driver/trips', tripController.createTrip);
-router.get('/users/:id/driver', tripController.getDriverDashboard);
-router.post('/trips/:id/delete', tripController.deleteTrip);
-router.get('/trips/:id/edit', tripController.getEditTripForm);
-router.post('/trips/:id/edit', tripController.updateTrip);
+router.get("/", tripController.getHomePage);
+router.get("/trips", tripController.getAllTrips);
+
+router.get("/users/:id/driver", ensureAuthenticated, tripController.getDriverDashboard);
+router.post("/users/:id/driver/trips", ensureAuthenticated, tripController.createTrip);
+
+router.get("/trips/:id/edit", ensureAuthenticated, tripController.getEditTripForm);
+router.post("/trips/:id/edit", ensureAuthenticated, tripController.updateTrip);
+
+router.post("/trips/:id/delete", ensureAuthenticated, tripController.deleteTrip);
 
 module.exports = router;

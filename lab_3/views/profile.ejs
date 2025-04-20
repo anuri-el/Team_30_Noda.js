@@ -1,0 +1,12 @@
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow">
+	<h1 class="text-xl font-bold mb-4">Профіль користувача</h1>
+
+	<p><strong>Ім’я:</strong> <%= user.name %></p>
+	<p><strong>Email:</strong> <%= user.email %></p>
+	<p><strong>Роль:</strong> <%= user.role %></p>
+
+
+	<a href="/users/profile/edit" class="inline-block mt-4 text-blue-500 underline">Редагувати</a>
+	<a href="/logout" class="inline-block mt-4 text-blue-500 underline">Вийти</a>
+
+</div>
