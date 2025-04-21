@@ -1,12 +1,87 @@
-<form action="" method="get" class="flex flex-col ">
-    <input type="text" placeholder="Search..." class="w-full h-10 rounded-md p-4 text-base">
-    <label for="">Filters:</label>
-</form>
-<h1 class="mt-8">Available Rides</h1>
-<ul>
-    <% trips.forEach(trip=> { %>
-        <li>
-            <%= trip.from %> - <%= trip.to %> | <%= trip.date %> | Passengers: <%= trip.seats %>
-        </li>
-        <% }) %>
-</ul>
+<div class="flex flex-col">
+    <form action="" method="get" class="flex flex-col gap-2">
+        <div class="flex w-full gap-2">
+            <input type="text" placeholder="Search..." class="w-full h-10 rounded-md p-4 text-base">
+            <button type="submit"
+                class="h-10 aspect-square flex items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="6" />
+                    <line x1="16" y1="16" x2="21" y2="21" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex flex-row h-16 w-full gap-4 items-center">
+            <h2 class="text-sm py-2">Filters:</h2>
+            <ul class="flex flex-row flex-grow h-full items-center gap-1 justify-between">
+                <li class="h-8">
+                    <select name="filter-from" id="" class="h-full min-w-28 rounded-md px-2">
+                        <option value="" selected disabled>From</option>
+                    </select>
+                </li>
+                <li class="h-8">
+                    <select name="filter-to" id="" class="h-full min-w-28 rounded-md px-2">
+                        <option value="" selected disabled>To</option>
+                    </select>
+                </li>
+                <li class="h-full flex flex-row items-center gap-1">
+                    <label class="text-sm font-medium" for="date-from">Between</label>
+                    <input type="date" id="date-from" name="date-from"
+                        class="max-w-32 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                    <label class="text-sm font-medium" for="date-to">and</label>
+                    <input type="date" id="date-to" name="date-to"
+                        class="max-w-32 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                </li>
+                <li class="h-full max-w-36 flex flex-col">
+                    <label for="filter-free-spots" class="text-sm font-medium whitespace-nowrap">Free spots:</label>
+
+                    <div class="flex flex-col flex-grow">
+                        <input type="range" name="filter-free-spots" value="1" min="0" max="10" id="filter-free-spots"
+                            list="values" class="w-full accent-blue-500" />
+
+                        <div class="flex justify-between w-full">
+                            <span class="w-1/6 text-center text-xs text-gray-600">0</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">2</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">4</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">6</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">8</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">10+</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </form>
+    <hr class="border-2 rounded-md my-2 border-slate-300" />
+
+    <h1 class="text-xl font-bold text-blue-900 my-3">Available Rides</h1>
+    <table class="w-full table-auto border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+        <thead class="bg-slate-100 text-left text-sm text-slate-600">
+            <tr>
+                <th class="px-4 py-2 border-b border-slate-200">From</th>
+                <th class="px-4 py-2 border-b border-slate-200">To</th>
+                <th class="px-4 py-2 border-b border-slate-200">Date</th>
+                <th class="px-4 py-2 border-b border-slate-200">Seats</th>
+            </tr>
+        </thead>
+        <tbody class="text-sm text-slate-700">
+            <% trips.forEach(trip=> { %>
+                <tr class="even:bg-slate-50 hover:bg-blue-50 transition">
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.from %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.to %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.date %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.seats %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>
