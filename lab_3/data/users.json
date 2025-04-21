@@ -15,5 +15,12 @@
     "email": "a@a.a",
     "password": "$2b$10$PVb2k9OI91MApnhmmL36veUaPxfN1A7ecFLv6ROxw/oLFLKMkGiDq",
     "role": "passenger"
+  },
+  {
+    "id": 1745255351432,
+    "name": "Oleksandr",
+    "email": "oleksandr@gmail.com",
+    "password": "$2b$10$76NyNhyVs.PWCQt9EZ4c9OJ8pUp6fj8JAOGE2bE/Wo.7adDoGZ/t2",
+    "role": "passenger"
   }
 ]

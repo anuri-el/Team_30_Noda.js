@@ -13,32 +13,6 @@ exports.getUserDashboard = async (req, res) => {
 	}
 };
 
-exports.showRegistrationForm = (req, res) => {
-	res.render("auth/register", { title: "Register", error: null });
-};
-
-exports.registerUser = async (req, res) => {
-	const { name, email, password, role } = req.body;
-	const users = await getAllUsers();
-	const existingUser = users.find(user => user.email === email);
-	if (existingUser) {
-		return res.render("auth/register", { error: "Email вже використовується" });
-	}
-
-	const hashedPassword = await bcrypt.hash(password, 10);
-	const newUser = {
-		id: Date.now(),
-		name,
-		email,
-		password: hashedPassword,
-		role
-	};
-	users.push(newUser);
-	await fs.promises.writeFile(userFilePath, JSON.stringify(users, null, 2));
-	req.session.user = newUser;
-	res.redirect("/users/profile");
-};
-
 exports.getProfile = (req, res) => {
 	const user = req.session.user;
 	if (!user) return res.redirect("/users/login");
@@ -54,12 +28,12 @@ exports.logout = (req, res) => {
 
 exports.showEditProfileForm = async (req, res) => {
 	const user = req.user;
-	res.render('profile-edit', { user });
+	res.render("profile-edit", { user });
 };
 
 exports.updateProfile = async (req, res) => {
 	const { name } = req.body;
 	await userService.updateUserName(req.user.id, name);
 	req.user.name = name; // Оновлюємо в сесії
-	res.redirect('/users/profile');
+	res.redirect("/users/profile");
 };
