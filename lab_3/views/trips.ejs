@@ -1,7 +1,7 @@
 <div class="flex flex-col">
     <form action="" method="get" class="flex flex-col gap-2">
         <div class="flex w-full gap-2">
-            <input type="text" placeholder="Search..." class="w-full h-10 rounded-md p-4 text-base">
+            <input type="text" name="search" placeholder="Search..." class="w-full h-10 rounded-md p-4 text-base">
             <button type="submit"
                 class="h-10 aspect-square flex items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -12,25 +12,25 @@
             </button>
         </div>
 
-        <div class="flex flex-row h-16 w-full gap-4 items-center">
-            <h2 class="text-sm py-2">Filters:</h2>
-            <ul class="flex flex-row flex-grow h-full items-center gap-1 justify-between">
-                <li class="h-8">
-                    <select name="filter-from" id="" class="h-full min-w-28 rounded-md px-2">
+        <div class="flex flex-row h-16 w-full items-center">
+            <h2 class="text-base mr-4">Filters:</h2>
+            <ul class="flex flex-row flex-grow h-full items-center gap-4 justify-between">
+                <li class="h-8 flex-1 max-w-56">
+                    <select name="filter-dest-from" id="" class="h-full w-full rounded-md px-2">
                         <option value="" selected disabled>From</option>
                     </select>
                 </li>
-                <li class="h-8">
-                    <select name="filter-to" id="" class="h-full min-w-28 rounded-md px-2">
+                <li class="h-8 flex-1  max-w-56">
+                    <select name="filter-dest-to" id="" class="h-full w-full rounded-md px-2">
                         <option value="" selected disabled>To</option>
                     </select>
                 </li>
                 <li class="h-full flex flex-row items-center gap-1">
-                    <label class="text-sm font-medium" for="date-from">Between</label>
-                    <input type="date" id="date-from" name="date-from"
+                    <label class="text-sm font-medium" for="filter-date-from">Between</label>
+                    <input type="date" id="date-from" name="filtet-date-from"
                         class="max-w-32 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
-                    <label class="text-sm font-medium" for="date-to">and</label>
-                    <input type="date" id="date-to" name="date-to"
+                    <label class="text-sm font-medium" for="filter-date-to">and</label>
+                    <input type="date" id="date-to" name="filter-date-to"
                         class="max-w-32 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
                 </li>
                 <li class="h-full max-w-36 flex flex-col">
@@ -59,6 +59,7 @@
     <table class="w-full table-auto border border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <thead class="bg-slate-100 text-left text-sm text-slate-600">
             <tr>
+                <th class="px-4 py-2 border-b border-slate-200 font-semibold">Title</th>
                 <th class="px-4 py-2 border-b border-slate-200">From</th>
                 <th class="px-4 py-2 border-b border-slate-200">To</th>
                 <th class="px-4 py-2 border-b border-slate-200">Date</th>
@@ -68,6 +69,9 @@
         <tbody class="text-sm text-slate-700">
             <% trips.forEach(trip=> { %>
                 <tr class="even:bg-slate-50 hover:bg-blue-50 transition">
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.title %>
+                    </td>
                     <td class="px-4 py-2 border-b border-slate-100">
                         <%= trip.from %>
                     </td>

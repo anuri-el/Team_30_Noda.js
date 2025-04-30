@@ -6,9 +6,18 @@ exports.getHomePage = (req, res) => {
 
 exports.getAllTrips = async (req, res) => {
 	try {
-		const trips = await tripService.getAllTrips();
+		const filters = {
+			search: (req.query.search || "").toLowerCase(),
+			from: (req.query["filter-from"] || "").toLowerCase(),
+			to: (req.query["filter-to"] || "").toLowerCase(),
+			dateFrom: req.query["filter-date-from"] || "",
+			dateTo: req.query["filter-date-to"] || "",
+			freeSpots: req.query["filter-free-spots"] || 1,
+		};
+		const trips = await tripService.fetchTrips(filters);
 		res.render("trips", { title: "Trips", trips });
 	} catch (err) {
+		console.log(err);
 		res.status(500).send("Error");
 	}
 };
