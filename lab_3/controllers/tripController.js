@@ -4,18 +4,25 @@ exports.getHomePage = (req, res) => {
 	res.render("index");
 };
 
-exports.getAllTrips = async (req, res) => {
+exports.getAllTrips = (req, res) => {
 	try {
 		const filters = {
 			search: (req.query.search || "").toLowerCase(),
-			from: (req.query["filter-from"] || "").toLowerCase(),
-			to: (req.query["filter-to"] || "").toLowerCase(),
+			from: (req.query["filter-dest-from"] || "").toLowerCase(),
+			to: (req.query["filter-dest-to"] || "").toLowerCase(),
 			dateFrom: req.query["filter-date-from"] || "",
 			dateTo: req.query["filter-date-to"] || "",
 			freeSpots: req.query["filter-free-spots"] || 1,
 		};
-		const trips = await tripService.fetchTrips(filters);
-		res.render("trips", { title: "Trips", trips });
+		const trips = tripService.fetchTrips(filters);
+		const { fromList, toList } = tripService.fetchLocations();
+		res.render("trips/trips", {
+			title: "Trips",
+			trips,
+			filters,
+			fromList,
+			toList,
+		});
 	} catch (err) {
 		console.log(err);
 		res.status(500).send("Error");
@@ -77,13 +84,25 @@ exports.deleteTrip = async (req, res) => {
 
 exports.getEditTripForm = async (req, res) => {
 	const tripId = parseInt(req.params.id);
-	const trips = await tripService.getAllTrips();
-	const trip = trips.find((t) => t.id === tripId);
+	const trip = await tripService.getTripById(tripId);
 
 	if (!trip) return res.status(404).send("Рейс не знайдено");
 
-	res.render("edit_trip", { trip, title: "Editing trip" });
+	res.render("trips/edit_trip", { trip, title: "Editing trip" });
 };
+
+exports.getBookingRequestForm = async (req, res) => {
+	const tripId = parseInt(req.params.id);
+	const trip = await tripService.getTripById(tripId);
+	if (!trip) return res.status(404).send("Рейс не знайдено");
+
+	res.render("trips/booking_request", {
+		trip,
+		title: "Placing a booking request on a trip",
+	});
+};
+
+exports.createBookingRequest = async (req, res) => {};
 
 exports.updateTrip = async (req, res) => {
 	const tripId = parseInt(req.params.id);

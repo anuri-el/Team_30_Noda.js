@@ -1,9 +1,11 @@
 const fs = require("fs").promises;
+const fsSyncOnly = require("fs");
 const path = require("path");
 const tripsFilePath = path.join(__dirname, "../data/trips.json");
 
-exports.getAll = async () => {
-	const data = await fs.readFile(tripsFilePath, "utf-8");
+exports.getAll = () => {
+	// sync
+	const data = fsSyncOnly.readFileSync(tripsFilePath, "utf-8");
 	return JSON.parse(data);
 };
 
@@ -26,10 +28,24 @@ exports.delete = (id) => {
 	});
 };
 
-exports.getById = async (id) => {
-	const data = await fs.readFile(tripsFilePath, "utf-8");
-	const trips = JSON.parse(data);
-	return trips.find((t) => t.id === id);
+exports.fetchUser = (id, callback) => {
+	// Callback
+	fs.readFile(tripsFilePath, "utf-8", (err, data) => {
+		if (err) return callback(err);
+
+		try {
+			const trips = JSON.parse(data);
+			const trip = trips.find((t) => t.id === id);
+
+			if (trip) {
+				callback(null, trip); // success
+			} else {
+				callback(new Error("Trip not found")); // not found
+			}
+		} catch (parseErr) {
+			callback(parseErr); // JSON parse error
+		}
+	});
 };
 
 exports.update = async (id, newData) => {

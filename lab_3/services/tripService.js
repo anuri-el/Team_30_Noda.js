@@ -1,8 +1,7 @@
 const tripRepository = require("../repositories/tripRepository");
 
-exports.fetchTrips = async (filters) => {
-	const allTrips = await tripRepository.getAll();
-	console.log(filters);
+exports.fetchTrips = (filters) => {
+	const allTrips = tripRepository.getAll();
 
 	return allTrips.filter((trip) => {
 		const matchesSearch =
@@ -14,8 +13,6 @@ exports.fetchTrips = async (filters) => {
 		const matchesFrom = !filters.from || trip.from === filters.from;
 		const matchesTo = !filters.to || trip.to === filters.to;
 
-		console.log(matchesTo);
-
 		const matchesDateFrom =
 			!filters.dateFrom ||
 			new Date(trip.date) >= new Date(filters.dateFrom);
@@ -24,8 +21,6 @@ exports.fetchTrips = async (filters) => {
 
 		const matchesFreeSpots =
 			!filters.freeSpots || trip.seats >= Number(filters.freeSpots);
-
-		console.log(matchesFreeSpots);
 
 		return (
 			matchesSearch &&
@@ -38,6 +33,15 @@ exports.fetchTrips = async (filters) => {
 	});
 };
 
+exports.fetchLocations = () => {
+	const allTrips = tripRepository.getAll();
+
+	const fromList = allTrips.map((trip) => trip.from);
+	const toList = allTrips.map((trip) => trip.to);
+
+	return { fromList, toList };
+};
+
 exports.createTrip = async (tripData) => {
 	return await tripRepository.add(tripData);
 };
@@ -46,5 +50,12 @@ exports.deleteTrip = async (id) => {
 	return await tripRepository.delete(id);
 };
 
-exports.getTripById = async (id) => await tripRepository.getById(id);
+exports.getTripById = (id) =>
+	tripRepository.fetchUser(id, (err, trip) => {
+		if (err) {
+			console.error("Error fetching trip:", err);
+			return;
+		}
+		return trip;
+	});
 exports.updateTrip = async (id, data) => await tripRepository.update(id, data);
