@@ -1,8 +1,7 @@
 const userService = require("../services/userService");
 
 exports.getUserDashboard = async (req, res) => {
-	const userId = parseInt(req.params.id);
-
+	const userId = parseInt(req.params.id, 10);
 	try {
 		const user = await userService.getUserById(userId);
 		if (!user) return res.status(404).send("User not found");
@@ -13,10 +12,17 @@ exports.getUserDashboard = async (req, res) => {
 	}
 };
 
-exports.getProfile = (req, res) => {
-	const user = req.session.user;
-	if (!user) return res.redirect("/users/login");
-	res.render("profile", { title: "My Profile", user });
+exports.getProfile = async (req, res) => {
+	const sessionUser = req.session.user;
+	if (!sessionUser) return res.redirect("/users/login");
+
+	try {
+		const user = await userService.getUserById(sessionUser.id);
+		res.render("profile", { title: "My Profile", user });
+	} catch (err) {
+		console.error(err);
+		res.status(500).send("Error");
+	}
 };
 
 exports.logout = (req, res) => {
@@ -27,13 +33,31 @@ exports.logout = (req, res) => {
 };
 
 exports.showEditProfileForm = async (req, res) => {
-	const user = req.user;
-	res.render("profile-edit", { user });
+	const sessionUser = req.session.user;
+	if (!sessionUser) return res.redirect("/users/login");
+
+	try {
+		const user = await userService.getUserById(sessionUser.id);
+		if (!user) return res.status(404).send("User not found");
+		res.render("profile-edit", { user });
+	} catch (err) {
+		console.error(err);
+		res.status(500).send("Error");
+	}
 };
 
 exports.updateProfile = async (req, res) => {
 	const { name } = req.body;
-	await userService.updateUserName(req.user.id, name);
-	req.user.name = name; // Оновлюємо в сесії
-	res.redirect("/users/profile");
+	const sessionUser = req.session.user;
+
+	if (!sessionUser) return res.redirect("/users/login");
+
+	try {
+		await userService.updateUserName(sessionUser.id, name);
+		sessionUser.name = name; // Оновлюємо в сесії
+		res.redirect("/users/profile");
+	} catch (err) {
+		console.error(err);
+		res.status(500).send("Error updating profile");
+	}
 };
