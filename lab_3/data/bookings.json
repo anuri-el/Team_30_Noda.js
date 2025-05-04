@@ -1,0 +1,14 @@
+[
+	{
+		"id": 1,
+		"passengerId": 1745255351432,
+		"tripId": 1744662129266,
+		"seatsBooked": 2
+	},
+	{
+		"id": 2,
+		"passengerId": 1745173362849,
+		"tripId": 1744578611333,
+		"seatsBooked": 1
+	}
+]
