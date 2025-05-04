@@ -1,0 +1,9 @@
+<h1>Edit ride</h1>
+
+<form action="/trips/<%= trip.id %>/edit" method="POST">
+    <label>Leaving from: <input type="text" name="from" value="<%= trip.from %>" required></label><br>
+    <label>Going to: <input type="text" name="to" value="<%= trip.to %>" required></label><br>
+    <label>Date: <input type="date" name="date" value="<%= trip.date %>" required></label><br>
+    <label>Passengers: <input type="number" name="seats" value="<%= trip.seats %>" required></label><br>
+    <button type="submit">Save changes</button>
+</form>

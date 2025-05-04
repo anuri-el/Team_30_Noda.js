@@ -1,0 +1,131 @@
+<div class="flex flex-col px-2">
+    <form action="" method="get" class="flex flex-col gap-2">
+        <div class="flex w-full gap-2">
+            <input type="text" name="search" placeholder="Search..." class="w-full h-10 rounded-md p-4 text-base"
+                value="<%= filters.search || '' %>">
+            <button type="submit"
+                class="h-10 aspect-square flex items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="6" />
+                    <line x1="16" y1="16" x2="21" y2="21" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex flex-row h-16 w-full items-center gap-4">
+            <h2 class="text-base">Filters:</h2>
+            <ul class="flex flex-row flex-grow h-full items-center gap-4 justify-between">
+                <li class="h-8 flex-1 max-w-56">
+                    <select name="filter-dest-from" id="" class="h-full w-full rounded-md px-2">
+                        <option value="" <% if (!filters.from) { %>
+                            selected
+                            <% } %>>From
+                        </option>
+                        <% fromList.forEach(destFrom=> { %>
+                            <option value="<%=destFrom%>" <% if (filters.from==destFrom) { %>
+                                selected
+                                <% } %>>
+                                    <%=destFrom%>
+                            </option>
+                            <% }) %>
+                    </select>
+                </li>
+                <li class="h-8 flex-1  max-w-56">
+                    <select name="filter-dest-to" id="" class="h-full w-full rounded-md px-2">
+                        <option value="" <% if (!filters.to) { %>
+                            selected
+                            <% } %>>To
+                        </option>
+                        <% toList.forEach(destTo=> { %>
+                            <option value="<%=destTo%>" <% if (filters.to==destTo) { %>
+                                selected
+                                <% } %>>
+                                    <%=destTo%>
+                            </option>
+                            <% }) %>
+                    </select>
+                </li>
+                <li class="h-full flex flex-row items-center gap-1">
+                    <label class="text-sm font-medium" for="filter-date-from">Between</label>
+                    <input type="date" id="date-from" name="filter-date-from"
+                        class="max-w-32 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value="<%= filters.dateFrom || '' %>" />
+                    <label class="text-sm font-medium" for="filter-date-to">and</label>
+                    <input type="date" id="date-to" name="filter-date-to"
+                        class="max-w-32 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value="<%= filters.dateTo || '' %>" />
+                </li>
+                <li class="h-full max-w-36 flex flex-col">
+                    <label for="filter-free-spots" class="text-sm font-medium whitespace-nowrap">Free spots:</label>
+
+                    <div class="flex flex-col flex-grow">
+                        <input type="range" name="filter-free-spots" value="<%=filters.freeSpots || '1'%>" min="0"
+                            max="10" id="filter-free-spots" list="values" class="w-full accent-blue-500" />
+
+                        <div class="flex justify-between w-full">
+                            <span class="w-1/6 text-center text-xs text-gray-600">0</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">2</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">4</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">6</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">8</span>
+                            <span class="w-1/6 text-center text-xs text-gray-600">10+</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <a href="?search=<%= encodeURIComponent(filters.search || '') %>" class="h-10 aspect-square flex items-center justify-center rounded-md bg-slate-500 text-white hover:bg-slate-600 transition-colors 
+                <% if (!filters.from&&!filters.to&&!filters.dateFrom&&!filters.dateTo&&(filters.freeSpots==1)) { %>
+                hidden
+                <% } %>">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 4h18l-6 8v5l-6 3v-8L3 4z" />
+                    <line x1="1" y1="1" x2="19" y2="19" />
+                </svg>
+            </a>
+        </div>
+    </form>
+    <hr class="border-2 rounded-md my-2 border-slate-300" />
+
+    <h1 class="text-xl font-bold text-blue-900 my-3">Available Rides</h1>
+    <table class="w-full table-auto border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+        <thead class="bg-slate-100 text-left text-sm text-slate-600">
+            <tr>
+                <th class="px-4 py-2 border-b border-slate-200 font-semibold">Title</th>
+                <th class="px-4 py-2 border-b border-slate-200">From</th>
+                <th class="px-4 py-2 border-b border-slate-200">To</th>
+                <th class="px-4 py-2 border-b border-slate-200">Date</th>
+                <th class="px-4 py-2 border-b border-slate-200">Seats</th>
+                <th class="px-4 py-2 border-b border-slate-200 w-1/6">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="text-sm text-slate-700">
+            <% trips.forEach(trip=> { %>
+                <tr class="even:bg-slate-50 hover:bg-blue-50 transition">
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.title %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.from %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.to %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.date %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <%= trip.seats %>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-100">
+                        <a href="/trips/<%= trip.id %>/book"
+                            class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">
+                            Book now
+                        </a>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>
