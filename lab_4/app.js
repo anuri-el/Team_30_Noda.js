@@ -24,7 +24,7 @@ app.set("view engine", "ejs");
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -46,10 +46,6 @@ app.use(
 	})
 );
 
-// Passport init
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Passport strategy
 passport.use(
 	new LocalStrategy(
@@ -57,11 +53,11 @@ passport.use(
 		async (email, password, done) => {
 			try {
 				const user = await userService.getUserByEmail(email);
-				if (!user) return done(null, false, { message: "Невірна пошта" });
-
+				if (!user)
+					return done(null, false, { message: "Невірна пошта" });
 				const match = await bcrypt.compare(password, user.password);
-				if (!match) return done(null, false, { message: "Невірний пароль" });
-
+				if (!match)
+					return done(null, false, { message: "Невірний пароль" });
 				return done(null, user);
 			} catch (err) {
 				return done(err);
@@ -70,7 +66,9 @@ passport.use(
 	)
 );
 
-passport.serializeUser((user, done) => done(null, user.id));
+passport.serializeUser((user, done) => {
+	done(null, user.ID);
+});
 passport.deserializeUser(async (id, done) => {
 	try {
 		const user = await userService.getUserById(id);
@@ -79,6 +77,10 @@ passport.deserializeUser(async (id, done) => {
 		done(err);
 	}
 });
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 app.use("/", tripRoutes);

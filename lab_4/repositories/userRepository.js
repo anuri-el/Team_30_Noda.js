@@ -1,24 +1,28 @@
-const db = require('../database/database.js');
+const db = require("../database/database.js");
 
-exports.getUserByEmail = async (email) => {
-	return new Promise((resolve, reject) => {
+exports.getUserByEmail = (email) => {
+	user = new Promise((resolve, reject) => {
 		db.get("SELECT * FROM users WHERE email = ?", [email], (err, row) => {
 			if (err) return reject(err);
 			resolve(row);
 		});
 	});
+	console.log("rep", user);
+	return user;
 };
 
-exports.getUserById = async (id) => {
+exports.getUserById = (id) => {
+	console.log("get user by id");
 	return new Promise((resolve, reject) => {
-		db.get("SELECT * FROM users WHERE id = ?", [id], (err, row) => {
+		db.get("SELECT * FROM users WHERE ID = ?", [id], (err, row) => {
 			if (err) return reject(err);
 			resolve(row);
 		});
 	});
 };
 
-exports.createUser = async (user) => {
+exports.createUser = (user) => {
+	console.log("create user");
 	const { name, email, password } = user;
 	return new Promise((resolve, reject) => {
 		db.run(
@@ -32,7 +36,7 @@ exports.createUser = async (user) => {
 	});
 };
 
-exports.getAllUsers = async () => {
+exports.getAllUsers = () => {
 	return new Promise((resolve, reject) => {
 		db.all("SELECT * FROM users", (err, rows) => {
 			if (err) return reject(err);

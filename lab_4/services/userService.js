@@ -1,5 +1,5 @@
-const fs = require("fs").promises;
-const path = require("path");
+// const fs = require("fs").promises;
+// const path = require("path");
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/userRepository");
 
@@ -20,7 +20,7 @@ const createUser = async ({ name, email, password }) => {
 	const newUser = {
 		name,
 		email,
-		password: hashedPassword
+		password: hashedPassword,
 	};
 	return userRepository.createUser(newUser);
 };
@@ -34,5 +34,5 @@ module.exports = {
 	getUserById,
 	getUserByEmail,
 	createUser,
-	updateUserName
+	updateUserName,
 };
