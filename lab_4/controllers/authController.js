@@ -1,28 +1,39 @@
 const bcrypt = require("bcrypt");
-const fs = require("fs");
 const userService = require("../services/userService");
-const userFilePath = "./data/users.json";
 
 exports.registerUser = async (req, res) => {
-	const { name, email, password, role } = req.body;
-	const users = await userService.getAllUsers();
-	const existingUser = users.find((user) => user.email === email);
-	if (existingUser) {
-		return res.render("auth/register", {
-			error: "Email вже використовується",
+	try {
+		const { name, email, password } = req.body;
+
+		const existingUser = await userService.getUserByEmail(email);
+		if (existingUser) {
+			return res.render("auth/register", {
+				title: "Register",
+				error: "Email вже використовується",
+			});
+		}
+
+		const hashedPassword = await bcrypt.hash(password, 10);
+
+		const newUser = await userService.createUser({
+			name,
+			email,
+			password: hashedPassword,
+		});
+
+		// автоматичний логін після реєстрації
+		req.login(newUser, (err) => {
+			if (err) {
+				console.error("Login after register error:", err);
+				return res.redirect("/login");
+			}
+			res.redirect("/profile");
+		});
+	} catch (err) {
+		console.error("Registration error:", err);
+		res.status(500).render("auth/register", {
+			title: "Register",
+			error: "Помилка при реєстрації",
 		});
 	}
-
-	const hashedPassword = await bcrypt.hash(password, 10);
-	const newUser = {
-		id: Date.now(),
-		name,
-		email,
-		password: hashedPassword,
-		role,
-	};
-	users.push(newUser);
-	await fs.promises.writeFile(userFilePath, JSON.stringify(users, null, 2));
-	req.session.user = newUser;
-	res.redirect("/users/profile");
 };

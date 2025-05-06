@@ -30,7 +30,10 @@ exports.createUser = (user) => {
 			[name, email, password],
 			function (err) {
 				if (err) return reject(err);
-				resolve({ id: this.lastID, name, email });
+				db.get("SELECT * FROM users WHERE ID = ?", [this.lastID], (err, row) => {
+					if (err) return reject(err);
+					resolve(row);
+				});
 			}
 		);
 	});
