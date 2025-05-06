@@ -31,12 +31,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout");
 
-app.use((req, res, next) => {
-	res.locals.title = "Tripshare";
-	res.locals.user = req.user || null; // для доступу до користувача в шаблонах
-	next();
-});
-
 // Session
 app.use(
 	session({
@@ -82,6 +76,14 @@ passport.deserializeUser(async (id, done) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+	res.locals.title = "Tripshare";
+	res.locals.user = req.user || null;
+	res.locals.isAuthenticated = req.isAuthenticated ? req.isAuthenticated() : false;
+	next();
+});
+
+
 // Routes
 app.use("/", tripRoutes);
 app.use("/users", userRoutes);
@@ -99,12 +101,6 @@ app.use(function (err, req, res, next) {
 
 	res.status(err.status || 500);
 	res.render("error");
-});
-
-app.use((req, res, next) => {
-	res.locals.title = "Tripshare";
-	res.locals.user = req.session.user || null;
-	next();
 });
 
 module.exports = app;
