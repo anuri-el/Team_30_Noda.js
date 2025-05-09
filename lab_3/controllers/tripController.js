@@ -91,17 +91,24 @@ exports.getEditTripForm = async (req, res) => {
 	res.render("trips/edit_trip", { trip, title: "Editing trip" });
 };
 
-exports.getBookingRequestForm = async (req, res) => {
+exports.getBookingRequestForm = (req, res) => {
+	console.log("Bokking req form");
 	const tripId = parseInt(req.params.id);
-	const trip = await tripService.getTripById(tripId);
-	if (!trip) return res.status(404).send("Рейс не знайдено");
 
-	res.render("trips/booking_request", {
-		trip,
-		title: "Placing a booking request on a trip",
+	tripService.getTripById(tripId, (err, trip) => {
+		if (err) {
+			console.error("Error fetching trip:", err);
+			return res.status(500).send("Помилка отримання рейсу");
+		}
+		if (!trip) return res.status(404).send("Рейс не знайдено");
+
+		console.log("trip received for form", trip);
+		res.render("trips/booking_request", {
+			trip,
+			title: "Placing a booking request on a trip",
+		});
 	});
 };
-
 exports.createBookingRequest = async (req, res) => {};
 
 exports.updateTrip = async (req, res) => {
