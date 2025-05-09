@@ -28,15 +28,21 @@ exports.delete = (id) => {
 	});
 };
 
-exports.fetchUser = (id, callback) => {
+exports.fetchTrip = (id, callback) => {
 	// Callback
-	fs.readFile(tripsFilePath, "utf-8", (err, data) => {
-		if (err) return callback(err);
+	console.log("fetch trip");
+	fsSyncOnly.readFile(tripsFilePath, "utf-8", (err, data) => {
+		// console.log("read file");
+		if (err) {
+			console.log("error reading file");
+			callback(err);
+		}
 
 		try {
 			const trips = JSON.parse(data);
+			// console.log(trips);
 			const trip = trips.find((t) => t.id === id);
-
+			// console.log(trip);
 			if (trip) {
 				callback(null, trip); // success
 			} else {

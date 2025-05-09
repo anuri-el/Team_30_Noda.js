@@ -14,7 +14,7 @@ exports.getUserDashboard = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
 	const sessionUser = req.session.user;
-	if (!sessionUser) return res.redirect("/users/login");
+	if (!sessionUser) return res.redirect("/login");
 
 	try {
 		const user = await userService.getUserById(sessionUser.id);
@@ -34,7 +34,7 @@ exports.logout = (req, res) => {
 
 exports.showEditProfileForm = async (req, res) => {
 	const sessionUser = req.session.user;
-	if (!sessionUser) return res.redirect("/users/login");
+	if (!sessionUser) return res.redirect("/login");
 
 	try {
 		const user = await userService.getUserById(sessionUser.id);
@@ -50,12 +50,12 @@ exports.updateProfile = async (req, res) => {
 	const { name } = req.body;
 	const sessionUser = req.session.user;
 
-	if (!sessionUser) return res.redirect("/users/login");
+	if (!sessionUser) return res.redirect("/login");
 
 	try {
 		await userService.updateUserName(sessionUser.id, name);
 		sessionUser.name = name; // Оновлюємо в сесії
-		res.redirect("/users/profile");
+		res.redirect("/profile");
 	} catch (err) {
 		console.error(err);
 		res.status(500).send("Error updating profile");

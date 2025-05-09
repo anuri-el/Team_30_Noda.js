@@ -91,19 +91,6 @@ exports.getEditTripForm = async (req, res) => {
 	res.render("trips/edit_trip", { trip, title: "Editing trip" });
 };
 
-exports.getBookingRequestForm = async (req, res) => {
-	const tripId = parseInt(req.params.id);
-	const trip = await tripService.getTripById(tripId);
-	if (!trip) return res.status(404).send("Рейс не знайдено");
-
-	res.render("trips/booking_request", {
-		trip,
-		title: "Placing a booking request on a trip",
-	});
-};
-
-exports.createBookingRequest = async (req, res) => {};
-
 exports.updateTrip = async (req, res) => {
 	const tripId = parseInt(req.params.id);
 	const { from, to, date, seats } = req.body;

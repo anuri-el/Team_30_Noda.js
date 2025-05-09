@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const tripController = require("../controllers/tripController");
+const bookingController = require("../controllers/bookingController");
 const { ensureAuthenticated } = require("../middleware/authMiddleware");
 
 router.get("/", tripController.getHomePage);
@@ -9,24 +10,13 @@ router.get("/trips", tripController.getAllTrips);
 router.get(
 	"/trips/:id/book",
 	ensureAuthenticated,
-	tripController.getBookingRequestForm
+	bookingController.getBookingRequestForm
 );
 
 router.post(
 	"/trips/:id/book",
 	ensureAuthenticated,
-	tripController.createBookingRequest
-);
-
-router.get(
-	"/users/:id/driver",
-	ensureAuthenticated,
-	tripController.getDriverDashboard
-);
-router.post(
-	"/users/:id/driver/trips",
-	ensureAuthenticated,
-	tripController.createTrip
+	bookingController.createBookingRequest
 );
 
 router.get(

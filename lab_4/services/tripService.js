@@ -50,12 +50,7 @@ exports.deleteTrip = async (id) => {
 	return await tripRepository.delete(id);
 };
 
-exports.getTripById = (id) =>
-	tripRepository.fetchUser(id, (err, trip) => {
-		if (err) {
-			console.error("Error fetching trip:", err);
-			return;
-		}
-		return trip;
-	});
+exports.getTripById = (id, callback) => {
+	tripRepository.fetchTrip(id, callback);
+};
 exports.updateTrip = async (id, data) => await tripRepository.update(id, data);
