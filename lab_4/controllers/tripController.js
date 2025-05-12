@@ -1,10 +1,12 @@
 const tripService = require("../services/tripService");
 
 exports.getHomePage = (req, res) => {
-	res.render("index");
+	res.render("index", {
+		user: req.session.user || null,
+	});
 };
 
-exports.getAllTrips = (req, res) => {
+exports.getAllTrips = async (req, res) => {
 	try {
 		const filters = {
 			search: (req.query.search || "").toLowerCase(),
@@ -14,8 +16,8 @@ exports.getAllTrips = (req, res) => {
 			dateTo: req.query["filter-date-to"] || "",
 			freeSpots: req.query["filter-free-spots"] || 1,
 		};
-		const trips = tripService.fetchTrips(filters);
-		const { fromList, toList } = tripService.fetchLocations();
+		const trips = await tripService.fetchTrips(filters);
+		const { fromList, toList } = await tripService.fetchLocations();
 		res.render("trips/trips", {
 			title: "Trips",
 			trips,
@@ -65,6 +67,7 @@ exports.getDriverDashboard = async (req, res) => {
 
 		res.render("driver", { user, trips: userTrips });
 	} catch (err) {
+		console.error(err);
 		res.status(500).send("Error");
 	}
 };

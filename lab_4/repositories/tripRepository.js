@@ -1,65 +1,64 @@
-const fs = require("fs").promises;
-const fsSyncOnly = require("fs");
-const path = require("path");
-const tripsFilePath = path.join(__dirname, "../data/trips.json");
+const db = require("../database/database.js");
 
-exports.getAll = () => {
-	// sync
-	const data = fsSyncOnly.readFileSync(tripsFilePath, "utf-8");
-	return JSON.parse(data);
+// Отримати всі поїздки
+exports.getAll = async () => {
+	return new Promise((resolve, reject) => {
+		db.all("SELECT * FROM trips", (err, rows) => {
+			if (err) return reject(err);
+			resolve(rows);
+		});
+	});
 };
 
+// Додати нову поїздку
 exports.add = async (trip) => {
-	// async-await
-	const data = await fs.readFile(tripsFilePath, "utf-8");
-	const trips = JSON.parse(data);
-	trip.id = Date.now();
-	trips.push(trip);
-	await fs.writeFile(tripsFilePath, JSON.stringify(trips, null, 2));
-};
-
-exports.delete = (id) => {
-	// Promise
-	fs.readFile(tripsFilePath, "utf-8").then((data) => {
-		let trips = JSON.parse(data);
-		id = parseInt(id);
-		trips = trips.filter((trip) => trip.id !== id);
-		fs.writeFile(tripsFilePath, JSON.stringify(trips, null, 2));
-	});
-};
-
-exports.fetchTrip = (id, callback) => {
-	// Callback
-	console.log("fetch trip");
-	fsSyncOnly.readFile(tripsFilePath, "utf-8", (err, data) => {
-		// console.log("read file");
-		if (err) {
-			console.log("error reading file");
-			callback(err);
-		}
-
-		try {
-			const trips = JSON.parse(data);
-			// console.log(trips);
-			const trip = trips.find((t) => t.id === id);
-			// console.log(trip);
-			if (trip) {
-				callback(null, trip); // success
-			} else {
-				callback(new Error("Trip not found")); // not found
+	const { from, to, date, seats, driverId } = trip;
+	return new Promise((resolve, reject) => {
+		db.run(
+			"INSERT INTO trips (from, to, date, seats, driverId) VALUES (?, ?, ?, ?, ?)",
+			[from, to, date, seats, driverId],
+			function (err) {
+				if (err) return reject(err);
+				db.get("SELECT * FROM trips WHERE ID = ?", [this.lastID], (err, row) => {
+					if (err) return reject(err);
+					resolve(row);
+				});
 			}
-		} catch (parseErr) {
-			callback(parseErr); // JSON parse error
-		}
+		);
 	});
 };
 
+// Видалити поїздку за ID
+exports.delete = async (id) => {
+	return new Promise((resolve, reject) => {
+		db.run("DELETE FROM trips WHERE ID = ?", [id], function (err) {
+			if (err) return reject(err);
+			resolve();
+		});
+	});
+};
+
+// Отримати поїздку за ID
+exports.fetchTrip = async (id) => {
+	return new Promise((resolve, reject) => {
+		db.get("SELECT * FROM trips WHERE ID = ?", [id], (err, row) => {
+			if (err) return reject(err);
+			resolve(row);
+		});
+	});
+};
+
+// Оновити поїздку
 exports.update = async (id, newData) => {
-	const data = await fs.readFile(tripsFilePath, "utf-8");
-	const trips = JSON.parse(data);
-	const index = trips.findIndex((t) => t.id === id);
-	if (index !== -1) {
-		trips[index] = { ...trips[index], ...newData };
-		await fs.writeFile(tripsFilePath, JSON.stringify(trips, null, 2));
-	}
+	const { from, to, date, seats } = newData;
+	return new Promise((resolve, reject) => {
+		db.run(
+			"UPDATE trips SET from = ?, to = ?, date = ?, seats = ? WHERE ID = ?",
+			[from, to, date, seats, id],
+			function (err) {
+				if (err) return reject(err);
+				resolve();
+			}
+		);
+	});
 };

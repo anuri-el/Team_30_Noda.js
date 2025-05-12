@@ -1,8 +1,32 @@
-<h1>Your pick of rides</h1>
+<section class="text-center py-16 bg-gray-100">
+    <div class="max-w-3xl mx-auto px-4">
+        <h1 class="text-4xl font-bold mb-4">Your pick of rides</h1>
+        <p class="text-lg text-gray-700 mb-8">
+            Плануйте, знаходьте та діліться поїздками з іншими користувачами. Зручно, швидко, безпечно.
+        </p>
 
-<p>log in</p>
-<p>sign up</p>
-<a href="/trips">View All Rides</a>
-<br>
-<a href="users/1">user-1</a>
-<p>Logged in user: <%= user ? user.name : "No user" %></p>
+        <div class="flex justify-center gap-4 mb-10">
+            <a href="/trips" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded">
+                Знайти поїздку
+            </a>
+
+            <% if (user) { %>
+                <a href="/users/<%= user.id %>/driver" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded">
+                    Мої поїздки
+                </a>
+            <% } else { %>
+                <a href="/register" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-5 py-2 rounded">
+                    Реєстрація
+                </a>
+            <% } %>
+        </div>
+
+        <form action="/trips" method="get" class="max-w-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="text" name="filter-dest-from" placeholder="Звідки" class="p-2 border rounded" />
+            <input type="text" name="filter-dest-to" placeholder="Куди" class="p-2 border rounded" />
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                Пошук
+            </button>
+        </form>
+    </div>
+</section>

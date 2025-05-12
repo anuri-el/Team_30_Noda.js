@@ -1,21 +1,19 @@
 const tripRepository = require("../repositories/tripRepository");
 
-exports.fetchTrips = (filters) => {
-	const allTrips = tripRepository.getAll();
+exports.fetchTrips = async (filters) => {
+	const allTrips = await tripRepository.getAll();
 
 	return allTrips.filter((trip) => {
 		const matchesSearch =
 			!filters.search ||
 			trip.from.toLowerCase().includes(filters.search) ||
-			trip.to.toLowerCase().includes(filters.search) ||
-			trip.title.toLowerCase().includes(filters.search);
+			trip.to.toLowerCase().includes(filters.search);
 
-		const matchesFrom = !filters.from || trip.from === filters.from;
-		const matchesTo = !filters.to || trip.to === filters.to;
+		const matchesFrom = !filters.from || trip.from.toLowerCase() === filters.from;
+		const matchesTo = !filters.to || trip.to.toLowerCase() === filters.to;
 
 		const matchesDateFrom =
-			!filters.dateFrom ||
-			new Date(trip.date) >= new Date(filters.dateFrom);
+			!filters.dateFrom || new Date(trip.date) >= new Date(filters.dateFrom);
 		const matchesDateTo =
 			!filters.dateTo || new Date(trip.date) <= new Date(filters.dateTo);
 
@@ -33,11 +31,15 @@ exports.fetchTrips = (filters) => {
 	});
 };
 
-exports.fetchLocations = () => {
-	const allTrips = tripRepository.getAll();
+exports.getAllTrips = async () => {
+	return await tripRepository.getAll();
+};
 
-	const fromList = allTrips.map((trip) => trip.from);
-	const toList = allTrips.map((trip) => trip.to);
+exports.fetchLocations = async () => {
+	const allTrips = await tripRepository.getAll();
+
+	const fromList = [...new Set(allTrips.map((trip) => trip.from))];
+	const toList = [...new Set(allTrips.map((trip) => trip.to))];
 
 	return { fromList, toList };
 };
@@ -50,7 +52,8 @@ exports.deleteTrip = async (id) => {
 	return await tripRepository.delete(id);
 };
 
-exports.getTripById = (id, callback) => {
-	tripRepository.fetchTrip(id, callback);
+exports.getTripById = async (id) => {
+	return await tripRepository.fetchTrip(id);
 };
+
 exports.updateTrip = async (id, data) => await tripRepository.update(id, data);
