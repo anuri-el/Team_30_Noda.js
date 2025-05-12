@@ -92,11 +92,11 @@
     <table class="w-full table-auto border border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <thead class="bg-slate-100 text-left text-sm text-slate-600">
             <tr>
-                <th class="px-4 py-2 border-b border-slate-200 font-semibold">Title</th>
-                <th class="px-4 py-2 border-b border-slate-200">From</th>
-                <th class="px-4 py-2 border-b border-slate-200">To</th>
-                <th class="px-4 py-2 border-b border-slate-200">Date</th>
-                <th class="px-4 py-2 border-b border-slate-200">Seats</th>
+                <th class="px-4 py-2 border-b border-slate-200 font-semibold w-2/6">Title</th>
+                <th class="px-4 py-2 border-b border-slate-200 w-1/6">From</th>
+                <th class="px-4 py-2 border-b border-slate-200 w-1/6">To</th>
+                <th class="px-4 py-2 border-b border-slate-200 w-1/12">Date</th>
+                <th class="px-4 py-2 border-b border-slate-200 w-1/12">Seats full</th>
                 <th class="px-4 py-2 border-b border-slate-200 w-1/6">Actions</th>
             </tr>
         </thead>
@@ -104,7 +104,7 @@
             <% trips.forEach(trip=> { %>
                 <tr class="even:bg-slate-50 hover:bg-blue-50 transition">
                     <td class="px-4 py-2 border-b border-slate-100">
-                        <%= trip.title %>
+                        <%= trip.title || (trip.from + " to " + trip.to)%>
                     </td>
                     <td class="px-4 py-2 border-b border-slate-100">
                         <%= trip.from %>
@@ -116,10 +116,10 @@
                         <%= trip.date %>
                     </td>
                     <td class="px-4 py-2 border-b border-slate-100">
-                        <%= trip.seats %>
+                        <%= trip.occupiedSeats %>/<%= trip.seats %>
                     </td>
                     <td class="px-4 py-2 border-b border-slate-100">
-                        <a href="/trips/<%= trip.id %>/book"
+                        <a href="/trips/<%= trip.ID %>/book"
                             class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">
                             Book now
                         </a>

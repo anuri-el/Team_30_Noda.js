@@ -19,10 +19,14 @@ exports.add = async (trip) => {
 			[from, to, date, seats, driverId],
 			function (err) {
 				if (err) return reject(err);
-				db.get("SELECT * FROM trips WHERE ID = ?", [this.lastID], (err, row) => {
-					if (err) return reject(err);
-					resolve(row);
-				});
+				db.get(
+					"SELECT * FROM trips WHERE ID = ?",
+					[this.lastID],
+					(err, row) => {
+						if (err) return reject(err);
+						resolve(row);
+					}
+				);
 			}
 		);
 	});
@@ -40,9 +44,11 @@ exports.delete = async (id) => {
 
 // Отримати поїздку за ID
 exports.fetchTrip = async (id) => {
+	// console.log("fetching trip");
 	return new Promise((resolve, reject) => {
 		db.get("SELECT * FROM trips WHERE ID = ?", [id], (err, row) => {
 			if (err) return reject(err);
+			// console.log(row);
 			resolve(row);
 		});
 	});
@@ -50,11 +56,11 @@ exports.fetchTrip = async (id) => {
 
 // Оновити поїздку
 exports.update = async (id, newData) => {
-	const { from, to, date, seats } = newData;
+	const { from, to, date, seats, occupiedSeats, title } = newData;
 	return new Promise((resolve, reject) => {
 		db.run(
-			"UPDATE trips SET from = ?, to = ?, date = ?, seats = ? WHERE ID = ?",
-			[from, to, date, seats, id],
+			'UPDATE trips SET "from" = ?, "to" = ?, date = ?, seats = ?, occupiedSeats = ?, title = ? WHERE ID = ?',
+			[from, to, date, seats, occupiedSeats, title, id],
 			function (err) {
 				if (err) return reject(err);
 				resolve();

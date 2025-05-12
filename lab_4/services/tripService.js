@@ -9,16 +9,19 @@ exports.fetchTrips = async (filters) => {
 			trip.from.toLowerCase().includes(filters.search) ||
 			trip.to.toLowerCase().includes(filters.search);
 
-		const matchesFrom = !filters.from || trip.from.toLowerCase() === filters.from;
+		const matchesFrom =
+			!filters.from || trip.from.toLowerCase() === filters.from;
 		const matchesTo = !filters.to || trip.to.toLowerCase() === filters.to;
 
 		const matchesDateFrom =
-			!filters.dateFrom || new Date(trip.date) >= new Date(filters.dateFrom);
+			!filters.dateFrom ||
+			new Date(trip.date) >= new Date(filters.dateFrom);
 		const matchesDateTo =
 			!filters.dateTo || new Date(trip.date) <= new Date(filters.dateTo);
 
 		const matchesFreeSpots =
-			!filters.freeSpots || trip.seats >= Number(filters.freeSpots);
+			!filters.freeSpots ||
+			trip.seats - trip.occupiedSeats >= Number(filters.freeSpots);
 
 		return (
 			matchesSearch &&
@@ -57,3 +60,14 @@ exports.getTripById = async (id) => {
 };
 
 exports.updateTrip = async (id, data) => await tripRepository.update(id, data);
+
+exports.occupySeats = async (id, seatsBooked) => {
+	let trip = await tripRepository.fetchTrip(id);
+	console.log(trip);
+	trip.occupiedSeats = trip.occupiedSeats + seatsBooked;
+	console.log(trip.occupiedSeats);
+	if (trip.occupiedSeats > trip.seats) {
+		throw new Error("not enough free seats on a trip.");
+	}
+	await tripRepository.update(id, trip);
+};

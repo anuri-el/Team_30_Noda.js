@@ -1,12 +1,15 @@
 const express = require("express");
 const passport = require("passport");
 const authController = require("../controllers/authController");
+const tripController = require("../controllers/tripController");
 const router = express.Router();
 
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) return next();
 	res.redirect("/login");
 }
+
+router.get("/", tripController.getHomePage);
 
 router.get("/login", (req, res) => {
 	res.render("auth/login", { title: "Login", error: null });

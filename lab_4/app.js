@@ -79,19 +79,21 @@ app.use(passport.session());
 app.use((req, res, next) => {
 	res.locals.title = "Tripshare";
 	res.locals.user = req.user || null;
-	res.locals.isAuthenticated = req.isAuthenticated ? req.isAuthenticated() : false;
+	res.locals.isAuthenticated = req.isAuthenticated
+		? req.isAuthenticated()
+		: false;
 	next();
 });
 
-
 // Routes
-app.use("/", tripRoutes);
+app.use("/trips", tripRoutes);
 app.use("/users", userRoutes);
 app.use("/", authRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	next(createError(404));
+	next(createError(500));
 });
 
 // error handler

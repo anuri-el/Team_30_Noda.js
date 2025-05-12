@@ -17,6 +17,7 @@ exports.getAllTrips = async (req, res) => {
 			freeSpots: req.query["filter-free-spots"] || 1,
 		};
 		const trips = await tripService.fetchTrips(filters);
+		console.log(trips);
 		const { fromList, toList } = await tripService.fetchLocations();
 		res.render("trips/trips", {
 			title: "Trips",

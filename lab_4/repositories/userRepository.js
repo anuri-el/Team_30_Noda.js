@@ -12,7 +12,7 @@ exports.getUserByEmail = async (email) => {
 };
 
 exports.getUserById = async (id) => {
-	// console.log("get user by id");
+	console.log("get user by id");
 	return new Promise((resolve, reject) => {
 		db.get("SELECT * FROM users WHERE ID = ?", [id], (err, row) => {
 			if (err) return reject(err);

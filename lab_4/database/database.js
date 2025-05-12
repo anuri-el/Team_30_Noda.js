@@ -10,6 +10,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
 	}
 });
 
+db.run("PRAGMA foreign_keys = ON", (err) => {
+	if (err)
+		return console.error("Failed to enable foreign keys:", err.message);
+});
+
 module.exports = db;
 db.all("SELECT name FROM sqlite_master WHERE type='table'", (err, rows) => {
 	if (err) {
