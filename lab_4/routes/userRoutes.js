@@ -5,14 +5,9 @@ const tripController = require("../controllers/tripController");
 const { ensureAuthenticated } = require("../middleware/authMiddleware");
 
 router.get("/profile", ensureAuthenticated, userController.getProfile);
-router.get("/logout", userController.logout);
-
-router.get(
-	"/profile/edit",
-	ensureAuthenticated,
-	userController.showEditProfileForm
-);
+router.get("/profile/edit", ensureAuthenticated, userController.showEditProfileForm);
 router.post("/profile/edit", ensureAuthenticated, userController.updateProfile);
+router.get("/logout", userController.logout);
 
 router.get("/:id", ensureAuthenticated, userController.getUserDashboard);
 
