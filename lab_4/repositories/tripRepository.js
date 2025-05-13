@@ -15,7 +15,7 @@ exports.add = async (trip) => {
 	const { from, to, date, seats, driverId } = trip;
 	return new Promise((resolve, reject) => {
 		db.run(
-			"INSERT INTO trips (from, to, date, seats, driverId) VALUES (?, ?, ?, ?, ?)",
+			"INSERT INTO trips (\"from\", \"to\", date, seats, driverId) VALUES (?, ?, ?, ?, ?)",
 			[from, to, date, seats, driverId],
 			function (err) {
 				if (err) return reject(err);
