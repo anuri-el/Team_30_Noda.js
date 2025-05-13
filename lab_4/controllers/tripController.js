@@ -92,6 +92,9 @@ exports.getEditTripForm = async (req, res) => {
 
 	if (!trip) return res.status(404).send("Рейс не знайдено");
 
+	// 🔧 Гарантуємо, що `trip.id` існує
+	trip.id = trip.ID; // якщо повертається ID з бази
+
 	res.render("trips/edit_trip", { trip, title: "Editing trip" });
 };
 

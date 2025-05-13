@@ -35,7 +35,16 @@ exports.fetchTrips = async (filters) => {
 };
 
 exports.getAllTrips = async () => {
-	return await tripRepository.getAll();
+	const trips = await tripRepository.getAll();
+	return trips.map(trip => ({
+		id: trip.ID,
+		from: trip.from,
+		to: trip.to,
+		date: trip.date,
+		seats: trip.seats,
+		occupiedSeats: trip.occupiedSeats,
+		driverId: trip.driverId
+	}));
 };
 
 exports.fetchLocations = async () => {
