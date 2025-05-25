@@ -2,7 +2,7 @@ const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize({
 	dialect: "sqlite",
-	storage: "D:\\КПІ\\Team_30_Noda.js\\lab_5\\database\\tripshare.sqlite3",
+	storage: "C:\\Users\\User\\Documents\\NetBeansProjects\\demo5\\Team_30_Noda.js\\lab_5\\tripshare.sqlite3",
 });
 
 async function test_db() {
