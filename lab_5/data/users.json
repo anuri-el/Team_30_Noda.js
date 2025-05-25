@@ -1,0 +1,50 @@
+[
+  {
+    "ID": 1,
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "password": "$2b$10$PVb2k9OI91MApnhmmL36veUaPxfN1A7ecFLv6ROxw/oLFLKMkGiDq"
+  },
+  {
+    "ID": 2,
+    "name": "Bob Smith",
+    "email": "bob@example.com",
+    "password": "$2b$10$Yh23gTSjk1NPaBcfRgl2eOQn0UHo8CE2gFkW8KXQOjOE6xU5cRGnq"
+  },
+  {
+    "ID": 3,
+    "name": "Charlie Lee",
+    "email": "charlie@example.com",
+    "password": "$2b$10$5PQZGwPfqznxZy1/8xLhQOtKiN45uKo9lD8l4POnbxn1sJZWaPEwu"
+  },
+  {
+    "ID": 4,
+    "name": "Diana Prince",
+    "email": "diana@example.com",
+    "password": "$2b$10$Hw7E29rO.qM0X6wrEw0wuOfO9BtPEOZBxTzGcFboMC3FvP9AZnPuW"
+  },
+  {
+    "ID": 5,
+    "name": "Ethan Hunt",
+    "email": "ethan@example.com",
+    "password": "$2b$10$yEXAdfVx84l/8cdS3g1ClOhFwBvLgGcXp6ZIOXfH3MxEzvU7yOjqy"
+  },
+  {
+    "ID": 6,
+    "name": "a",
+    "email": "a@a.a",
+    "password": "$2b$10$PVb2k9OI91MApnhmmL36veUaPxfN1A7ecFLv6ROxw/oLFLKMkGiDq"
+  },
+  {
+    "ID": 7,
+    "name": "Oleksandr",
+    "email": "oleksandr@gmail.com",
+    "password": "$2b$10$76NyNhyVs.PWCQt9EZ4c9OJ8pUp6fj8JAOGE2bE/Wo.7adDoGZ/t2"
+  },
+  {
+    "id": 1746489142764,
+    "name": "Oleksandr",
+    "email": "tunik@gmail.com",
+    "password": "$2b$10$ufTyrN9Amj2UYqEVNcBiVObxkK4M83G2jTm4dICKL2kG25XBvEOmK"
+  }
+]

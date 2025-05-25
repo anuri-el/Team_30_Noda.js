@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1744574947548,
+    "title": "trip1",
+    "from": "ret",
+    "to": "fd",
+    "date": "0256-05-24",
+    "seats": 342,
+    "driverId": 1
+  },
+  {
+    "id": 1744575304940,
+    "title": "trip2",
+    "from": "sdf",
+    "to": "ee4",
+    "date": "0062-04-02",
+    "seats": 66772,
+    "driverId": 1
+  },
+  {
+    "id": 1744575595819,
+    "title": "trip3",
+    "from": "trygff",
+    "to": "ertrt6",
+    "date": "0025-05-03",
+    "seats": 533,
+    "driverId": 1
+  },
+  {
+    "id": 1744578611333,
+    "title": "trip4",
+    "from": "retf1",
+    "to": "retrtd1",
+    "date": "0637-07-04",
+    "seats": 6,
+    "driverId": 1
+  },
+  {
+    "id": 1744662129266,
+    "title": "trip5",
+    "from": "Kyiv",
+    "to": "Lviv",
+    "date": "2025-04-08",
+    "seats": 4,
+    "driverId": 1
+  }
+]
