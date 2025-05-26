@@ -3,7 +3,7 @@ const path = require("path");
 
 const sequelize = new Sequelize({
 	dialect: "sqlite",
-	storage: path.join(__dirname, "../database/tripshare.sqlite3"),
+	storage: path.join(__dirname, "./tripshare.sqlite3"),
 });
 
 async function test_db() {

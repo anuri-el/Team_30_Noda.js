@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const tripController = require("../controllers/tripController");
-const bookingController = require("../controllers/bookingController");
-const { ensureAuthenticated } = require("../middleware/authMiddleware");
+const tripController = require("../../controllers/tripController");
+const bookingController = require("../../controllers/bookingController");
+const { ensureAuthenticated } = require("../../middleware/authMiddleware");
 
 router.get("/", tripController.getAllTrips);
 

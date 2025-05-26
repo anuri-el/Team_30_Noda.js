@@ -11,9 +11,8 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 
-const tripRoutes = require("./routes/tripRoutes");
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes");
+const viewRoutes = require("./routes/view/viewRoutes");
+const apiRoutes = require("./routes/api/apiRoutes");
 const userService = require("./services/userService");
 
 const app = express();
@@ -86,9 +85,8 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use("/trips", tripRoutes);
-app.use("/users", userRoutes);
-app.use("/", authRoutes);
+app.use("/", viewRoutes);
+app.use("/api", apiRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

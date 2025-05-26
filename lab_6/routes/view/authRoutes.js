@@ -1,7 +1,7 @@
 const express = require("express");
 const passport = require("passport");
-const authController = require("../controllers/authController");
-const tripController = require("../controllers/tripController");
+const authController = require("../../controllers/authController");
+const tripController = require("../../controllers/tripController");
 const router = express.Router();
 
 function ensureAuthenticated(req, res, next) {
