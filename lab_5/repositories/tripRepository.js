@@ -1,93 +1,76 @@
 const db = require("../database/database.js");
+const Trips = require("../database/models/trips");
 
 exports.getAll = async () => {
-	return new Promise((resolve, reject) => {
-		db.all("SELECT * FROM trips", (err, rows) => {
-			if (err) return reject(err);
-			resolve(rows);
-		});
-	});
+	// return new Promise((resolve, reject) => {
+	// 	db.all("SELECT * FROM trips", (err, rows) => {
+	// 		if (err) return reject(err);
+	// 		resolve(rows);
+	// 	});
+	// });
+	try {
+		const trips = await Trips.findAll();
+		return trips.map((trip) => trip.get({ plain: true }));
+	} catch (err) {
+		throw err;
+	}
 };
 
-exports.add = async (trip) => {
-	const { from, to, date, seats, driverId } = trip;
+exports.add = async (tripData) => {
+	const { from, to, date, seats, driverId, title = null } = tripData;
+	const t = await Trips.sequelize.transaction();
 
-	return new Promise((resolve, reject) => {
-		db.serialize(() => {
-			db.run("BEGIN TRANSACTION");
-			db.run(
-				'INSERT INTO trips ("from", "to", date, seats, driverId) VALUES (?, ?, ?, ?, ?)',
-				[from, to, date, seats, driverId],
-				function (err) {
-					if (err) {
-						db.run("ROLLBACK");
-						return reject(err);
-					}
+	try {
+		const newTrip = await Trips.create(
+			{ from, to, date, seats, driverId, title },
+			{ transaction: t }
+		);
+		await t.commit();
+		return newTrip.get({ plain: true });
+	} catch (err) {
+		await t.rollback();
+		throw err;
+	}
 
-					db.get("SELECT * FROM trips WHERE ID = ?", [this.lastID], (err, row) => {
-						if (err) {
-							db.run("ROLLBACK");
-							return reject(err);
-						}
-
-						db.run("COMMIT");
-						resolve(row);
-					});
-				}
-			);
-		});
-	});
 };
 
 exports.delete = async (id) => {
-	return new Promise((resolve, reject) => {
-		db.serialize(() => {
-			db.run("BEGIN TRANSACTION");
+	const t = await Trips.sequelize.transaction();
 
-			db.run("DELETE FROM trips WHERE ID = ?", [id], function (err) {
-				if (err) {
-					db.run("ROLLBACK");
-					return reject(err);
-				}
-
-				db.run("COMMIT");
-				resolve();
-			});
-		});
-	});
+	try {
+		await Trips.destroy({ where: { ID: id }, transaction: t });
+		await t.commit();
+	} catch (err) {
+		await t.rollback();
+		throw err;
+	}
 };
 
 exports.fetchTrip = async (id) => {
-	// console.log("fetching trip");
-	return new Promise((resolve, reject) => {
-		db.get("SELECT * FROM trips WHERE ID = ?", [id], (err, row) => {
-			if (err) return reject(err);
-			// console.log(row);
-			resolve(row);
-		});
-	});
+	try {
+		const trip = await Trips.findByPk(id);
+		return trip ? trip.get({ plain: true }) : null;
+	} catch (err) {
+		throw err;
+	}
+
 };
 
 exports.update = async (id, newData) => {
-	const { from, to, date, seats, occupiedSeats, title } = newData;
+	const t = await Trips.sequelize.transaction();
+	try {
+		const trip = await Trips.findByPk(id, { transaction: t });
+		if (!trip) {
+			await t.rollback();
+			return null;
+		}
 
-	return new Promise((resolve, reject) => {
-		db.serialize(() => {
-			db.run("BEGIN TRANSACTION");
+		const updatedTrip = await trip.update(newData, { transaction: t });
+		await t.commit();
+		return updatedTrip.get({ plain: true });
+	} catch (err) {
+		await t.rollback();
+		throw err;
+	}
 
-			db.run(
-				'UPDATE trips SET "from" = ?, "to" = ?, date = ?, seats = ?, occupiedSeats = ?, title = ? WHERE ID = ?',
-				[from, to, date, seats, occupiedSeats, title, id],
-				function (err) {
-					if (err) {
-						db.run("ROLLBACK");
-						return reject(err);
-					}
-
-					db.run("COMMIT");
-					resolve();
-				}
-			);
-		});
-	});
 };
