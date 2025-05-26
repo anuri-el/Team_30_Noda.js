@@ -2,12 +2,18 @@ const tripRepository = require("../repositories/tripRepository");
 
 exports.fetchTrips = async (filters) => {
 	const allTrips = await tripRepository.getAll();
+	filters.search = filters.search.toLowerCase();
+	filters.from = filters.from.toLowerCase();
+	filters.to = filters.to.toLowerCase();
 
 	return allTrips.filter((trip) => {
+		const title = !trip.title ? "" : trip.title;
+
 		const matchesSearch =
 			!filters.search ||
 			trip.from.toLowerCase().includes(filters.search) ||
-			trip.to.toLowerCase().includes(filters.search);
+			trip.to.toLowerCase().includes(filters.search) ||
+			title.toLowerCase().includes(filters.search);
 
 		const matchesFrom =
 			!filters.from || trip.from.toLowerCase() === filters.from;
@@ -36,14 +42,14 @@ exports.fetchTrips = async (filters) => {
 
 exports.getAllTrips = async () => {
 	const trips = await tripRepository.getAll();
-	return trips.map(trip => ({
+	return trips.map((trip) => ({
 		id: trip.ID,
 		from: trip.from,
 		to: trip.to,
 		date: trip.date,
 		seats: trip.seats,
 		occupiedSeats: trip.occupiedSeats,
-		driverId: trip.driverId
+		driverId: trip.driverId,
 	}));
 };
 

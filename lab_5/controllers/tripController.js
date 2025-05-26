@@ -9,13 +9,14 @@ exports.getHomePage = (req, res) => {
 exports.getAllTrips = async (req, res) => {
 	try {
 		const filters = {
-			search: (req.query.search || "").toLowerCase(),
-			from: (req.query["filter-dest-from"] || "").toLowerCase(),
-			to: (req.query["filter-dest-to"] || "").toLowerCase(),
+			search: req.query.search || "",
+			from: req.query["filter-dest-from"] || "",
+			to: req.query["filter-dest-to"] || "",
 			dateFrom: req.query["filter-date-from"] || "",
 			dateTo: req.query["filter-date-to"] || "",
 			freeSpots: req.query["filter-free-spots"] || 1,
 		};
+		console.log(filters);
 		const trips = await tripService.fetchTrips(filters);
 		console.log(trips);
 		const { fromList, toList } = await tripService.fetchLocations();

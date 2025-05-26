@@ -1,13 +1,6 @@
-const db = require("../database/database.js");
 const Trips = require("../database/models/trips");
 
 exports.getAll = async () => {
-	// return new Promise((resolve, reject) => {
-	// 	db.all("SELECT * FROM trips", (err, rows) => {
-	// 		if (err) return reject(err);
-	// 		resolve(rows);
-	// 	});
-	// });
 	try {
 		const trips = await Trips.findAll();
 		return trips.map((trip) => trip.get({ plain: true }));
@@ -31,7 +24,6 @@ exports.add = async (tripData) => {
 		await t.rollback();
 		throw err;
 	}
-
 };
 
 exports.delete = async (id) => {
@@ -53,7 +45,6 @@ exports.fetchTrip = async (id) => {
 	} catch (err) {
 		throw err;
 	}
-
 };
 
 exports.update = async (id, newData) => {
@@ -72,5 +63,4 @@ exports.update = async (id, newData) => {
 		await t.rollback();
 		throw err;
 	}
-
 };
