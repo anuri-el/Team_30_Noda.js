@@ -40,6 +40,17 @@ exports.fetchTrips = async (filters) => {
 	});
 };
 
+exports.fetchTripsPaginated = async (filters, page, limit) => {
+	const allTrips = await this.fetchTrips(filters);
+
+	const totalCount = allTrips.length;
+	const offset = (page - 1) * limit;
+	const trips = allTrips.slice(offset, offset + limit);
+	console.log(trips);
+
+	return { trips, totalCount };
+};
+
 exports.getAllTrips = async () => {
 	const trips = await tripRepository.getAll();
 	return trips.map((trip) => ({

@@ -15,22 +15,38 @@ exports.getAllTrips = async (req, res) => {
 			to: req.query["filter-dest-to"] || "",
 			dateFrom: req.query["filter-date-from"] || "",
 			dateTo: req.query["filter-date-to"] || "",
-			freeSpots: req.query["filter-free-spots"] || 0,
+			freeSpots: req.query["filter-free-spots"] || 1,
 		};
-		console.log(filters);
+
+		const page = parseInt(req.query.page) || 1;
+		const limit = 10;
+
+		// console.log(filters);
 		const response = await axios.get(`${apiBase}/trips`, {
-			params: filters,
+			params: {
+				...filters,
+				page,
+				limit,
+			},
 		});
-		const trips = response.data;
-		console.log(trips);
+		const { trips, totalPages } = response.data;
+		// console.log(trips);
 		const locationResponse = await axios.get(`${apiBase}/trips/locations`);
 		const { fromList, toList } = locationResponse.data;
+
+		const filtersQuery = Object.entries(filters)
+			.filter(([_, val]) => val)
+			.map(([key, val]) => `&${key}=${encodeURIComponent(val)}`)
+			.join("");
 		res.render("trips/trips", {
 			title: "Trips",
 			trips,
 			filters,
 			fromList,
 			toList,
+			currentPage: page,
+			totalPages,
+			filtersQuery,
 		});
 	} catch (err) {
 		console.log(err);

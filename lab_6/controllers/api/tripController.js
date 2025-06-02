@@ -12,8 +12,21 @@ exports.getAllTrips = async (req, res) => {
 			dateTo: req.query.dateTo || "",
 			freeSpots: req.query.freeSpots || 0,
 		};
-		const trips = await tripService.fetchTrips(filters);
-		res.status(200).json(trips);
+		const page = parseInt(req.query.page) || 1;
+		const limit = parseInt(req.query.limit) || 15;
+
+		const { trips, totalCount } = await tripService.fetchTripsPaginated(
+			filters,
+			page,
+			limit
+		);
+		res.status(200).json({
+			trips,
+			page,
+			limit,
+			totalCount,
+			totalPages: Math.ceil(totalCount / limit),
+		});
 	} catch (err) {
 		console.error("Error fetching trips:", err);
 		res.status(500).json({ error: "Server error" });
@@ -22,8 +35,8 @@ exports.getAllTrips = async (req, res) => {
 
 // GET /api/trips/:id — Отримати одну поїздку за ID
 exports.getTripById = async (req, res) => {
+	const tripId = parseInt(req.params.id);
 	try {
-		const tripId = parseInt(req.params.id);
 		const trip = await tripService.getTripById(tripId);
 		if (!trip) {
 			return res.status(404).json({ error: "Trip not found" });
@@ -96,7 +109,7 @@ exports.deleteTrip = async (req, res) => {
 // GET /api/trips/locations — Отримати унікальні значення `from` і `to`
 exports.getLocations = async (req, res) => {
 	try {
-		const { fromList, toList } = await tripService.fetchLocations({});
+		const { fromList, toList } = await tripService.fetchLocations();
 
 		res.status(200).json({ fromList, toList });
 	} catch (err) {

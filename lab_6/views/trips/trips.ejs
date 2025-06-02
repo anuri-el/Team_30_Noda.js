@@ -128,4 +128,23 @@
                 <% }) %>
         </tbody>
     </table>
+    <div class="flex justify-center mt-4 gap-2">
+        <% if (currentPage> 1) { %>
+            <a href="?page=<%= currentPage - 1 %><%= filtersQuery %>"
+                class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded transition-colors">Previous</a>
+            <% } %>
+
+                <% for (let i=1; i <=totalPages; i++) { %>
+                    <a href="?page=<%= i %><%= filtersQuery %>"
+                        class="transition-colors px-4 py-2 rounded <% if (i === currentPage) { %> bg-blue-500 text-white hover:bg-blue-600<% } else { %> bg-slate-200 hover:bg-slate-300<% } %> transition-colors">
+                        <%= i %>
+                    </a>
+                    <% } %>
+
+                        <% if (currentPage < totalPages) { %>
+                            <a href="?page=<%= currentPage + 1 %><%= filtersQuery %>"
+                                class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded transition-colors">Next</a>
+                            <% } %>
+    </div>
+
 </div>
