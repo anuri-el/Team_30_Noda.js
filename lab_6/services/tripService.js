@@ -2,9 +2,9 @@ const tripRepository = require("../repositories/tripRepository");
 
 exports.fetchTrips = async (filters) => {
 	const allTrips = await tripRepository.getAll();
-	filters.search = filters.search.toLowerCase();
-	filters.from = filters.from.toLowerCase();
-	filters.to = filters.to.toLowerCase();
+	filters.search = filters.search ? filters.search.toLowerCase() : undefined;
+	filters.from = filters.from ? filters.from.toLowerCase() : undefined;
+	filters.to = filters.to ? filters.to.toLowerCase() : undefined;
 
 	return allTrips.filter((trip) => {
 		const title = !trip.title ? "" : trip.title;

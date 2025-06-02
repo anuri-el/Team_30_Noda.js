@@ -1,4 +1,5 @@
-const tripService = require("../services/tripService");
+const axios = require("axios");
+const { apiBase } = require("../config");
 
 exports.getHomePage = (req, res) => {
 	res.render("index", {
@@ -14,12 +15,16 @@ exports.getAllTrips = async (req, res) => {
 			to: req.query["filter-dest-to"] || "",
 			dateFrom: req.query["filter-date-from"] || "",
 			dateTo: req.query["filter-date-to"] || "",
-			freeSpots: req.query["filter-free-spots"] || 1,
+			freeSpots: req.query["filter-free-spots"] || 0,
 		};
 		console.log(filters);
-		const trips = await tripService.fetchTrips(filters);
+		const response = await axios.get(`${apiBase}/trips`, {
+			params: filters,
+		});
+		const trips = response.data;
 		console.log(trips);
-		const { fromList, toList } = await tripService.fetchLocations();
+		const locationResponse = await axios.get(`${apiBase}/trips/locations`);
+		const { fromList, toList } = locationResponse.data;
 		res.render("trips/trips", {
 			title: "Trips",
 			trips,
@@ -36,21 +41,18 @@ exports.getAllTrips = async (req, res) => {
 exports.createTrip = async (req, res) => {
 	const driverId = parseInt(req.params.id);
 	const { from, to, date, seats } = req.body;
-
-	const newTrip = {
-		id: Date.now(),
-		from,
-		to,
-		date,
-		seats: parseInt(seats),
-		driverId: driverId,
-	};
-
 	try {
-		await tripService.createTrip(newTrip);
+		await axios.post(`${apiBase}/trips`, {
+			from,
+			to,
+			date,
+			seats: parseInt(seats),
+			driverId,
+			title,
+		});
 		res.redirect(`/users/${driverId}/driver`);
 	} catch (err) {
-		console.error("Error:", err);
+		console.error("Error:", err.response?.data || err.message);
 		res.status(500).send("Error");
 	}
 };
@@ -59,15 +61,20 @@ exports.getDriverDashboard = async (req, res) => {
 	const userId = parseInt(req.params.id);
 
 	try {
-		const allTrips = await tripService.getAllTrips();
-		const userTrips = allTrips.filter((trip) => trip.driverId === userId);
+		const userResponse = await axios.get(`${apiBase}/users/${userId}/`);
+		const user = userResponse.data;
 
-		const user = {
+		const userIdAndName = {
 			id: userId,
-			name: `User #${userId}`,
+			name: user.name,
 		};
 
-		res.render("driver", { user, trips: userTrips });
+		const tripsResponse = await axios.get(
+			`${apiBase}/users/${userId}/trips`
+		);
+		const userTrips = tripsResponse.data;
+
+		res.render("driver", { user: userIdAndName, trips: userTrips });
 	} catch (err) {
 		console.error(err);
 		res.status(500).send("Error");
@@ -79,24 +86,27 @@ exports.deleteTrip = async (req, res) => {
 	const userId = req.body.userId;
 
 	try {
-		await tripService.deleteTrip(tripId);
+		await axios.delete(`${apiBase}/trips/${tripId}`);
 		res.redirect(`/users/${userId}/driver`);
 	} catch (err) {
-		console.error("Error:", err);
+		console.error("Error:", err.response?.data || err.message);
 		res.status(500).send("Error");
 	}
 };
 
 exports.getEditTripForm = async (req, res) => {
 	const tripId = parseInt(req.params.id);
-	const trip = await tripService.getTripById(tripId);
+	try {
+		const response = await axios.get(`${apiBase}/trips/${tripId}`);
+		const trip = response.data;
 
-	if (!trip) return res.status(404).send("Рейс не знайдено");
+		if (!trip) return res.status(404).send("Рейс не знайдено");
 
-	// 🔧 Гарантуємо, що `trip.id` існує
-	trip.id = trip.ID; // якщо повертається ID з бази
-
-	res.render("trips/edit_trip", { trip, title: "Editing trip" });
+		res.render("trips/edit_trip", { trip, title: "Editing trip" });
+	} catch (err) {
+		console.error("Error:", err.response?.data || err.message);
+		res.status(500).send("Error");
+	}
 };
 
 exports.updateTrip = async (req, res) => {
