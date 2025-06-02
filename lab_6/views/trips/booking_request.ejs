@@ -33,7 +33,7 @@
 		<div class="flex justify-between">
 			<span class="font-medium text-slate-600">Available Seats:</span>
 			<span>
-				<%= trip.seats %>
+				<%= trip.seats - trip.occupiedSeats %>
 			</span>
 		</div>
 

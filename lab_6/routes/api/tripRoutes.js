@@ -7,6 +7,12 @@ const bookingController = require("../../controllers/api/bookingController");
 router.get("/", tripController.getAllTrips);
 
 router.get(
+	"/locations",
+	//ensureAuthenticated,
+	tripController.getLocations
+);
+
+router.get(
 	"/:id/book",
 	// ensureAuthenticated,
 	bookingController.getBookingRequestData
@@ -21,21 +27,25 @@ router.post(
 router.get(
 	"/:id",
 	//ensureAuthenticated,
-	tripController.getTripById);
+	tripController.getTripById
+);
 
 router.post(
 	"/",
 	//ensureAuthenticated,
-	tripController.createTrip);
+	tripController.createTrip
+);
 
 router.put(
 	"/:id",
 	//ensureAuthenticated,
-	tripController.updateTrip);
+	tripController.updateTrip
+);
 
 router.delete(
 	"/:id",
 	//ensureAuthenticated,
-	tripController.deleteTrip);
+	tripController.deleteTrip
+);
 
 module.exports = router;
